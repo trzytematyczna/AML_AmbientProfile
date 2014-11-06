@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="C:\Users\moni\Documents\agh\coursera_Android\New folder\aml_ambientprofile1\app\build\intermediates\pre-dexed\debug\support-v4-18.0.0-6e0c881b0db7298cb4e917ae5f2a5a459157b1a4.jar"
+        jar="C:\Users\moni\android_studio_sdk\sdk\extras\android\m2repository\com\android\support\support-v4\18.0.0\support-v4-18.0.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="44ec51e9d395a47aab135e5e1b556c0007442156"/>
+
+</pre-dex-items>
