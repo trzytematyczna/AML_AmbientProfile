@@ -3,17 +3,18 @@ package pl.edu.agh.eis.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by moni on 2014-11-06.
  */
 public class AmbientDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "AmbientProfile.sqlite";
 
 
-    private static final String INT_TYPE = " TEXT";
+    private static final String INT_TYPE = " INTEGER";
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
 
@@ -42,6 +43,7 @@ public class AmbientDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        Log.d("DBHelper", "onCreate"+SQL_CREATE_ITEM_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_ITEM_TABLE);
     }
 
