@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import pl.edu.agh.eis.database.AmbientDbHelper;
 import pl.edu.agh.eis.database.TableEntry;
+import pl.edu.agh.eis.datasource.ExecuteProfile;
 import pl.edu.agh.eis.datasource.NewProfile;
 import pl.edu.agh.eis.datasource.Profile;
 import pl.edu.agh.eis.listview.MyProfileArrayAdapter;
@@ -141,13 +142,13 @@ public class StartActivity extends FragmentActivity implements
 
         ContentValues val = new ContentValues();
         val.put(TableEntry.ProfileEntry.COLUMN_NAME, name);
-        val.put(TableEntry.ProfileEntry.COLUMN_VOLUME_ON, checked1);
-        val.put(TableEntry.ProfileEntry.COLUMN_VOLUME_LEVEL, checked2);
-        val.put(TableEntry.ProfileEntry.COLUMN_BRIGHTNESS_LEVEL, checked3);
-        val.put(TableEntry.ProfileEntry.COLUMN_VIBRATIONS_ON, checked4);
-        val.put(TableEntry.ProfileEntry.COLUMN_AIRPLANE_ON, checked5);
-        val.put(TableEntry.ProfileEntry.COLUMN_NOTIFICATION_SOUND, checked6);
-        val.put(TableEntry.ProfileEntry.COLUMN_SCREEN_TIMEOUT_ON, checked7);
+        val.put(TableEntry.ProfileEntry.COLUMN_VOLUME_ON, parseBoolToInt(checked1));
+        val.put(TableEntry.ProfileEntry.COLUMN_VOLUME_LEVEL, parseBoolToInt(checked2));
+        val.put(TableEntry.ProfileEntry.COLUMN_BRIGHTNESS_LEVEL, parseBoolToInt(checked3));
+        val.put(TableEntry.ProfileEntry.COLUMN_VIBRATIONS_ON, parseBoolToInt(checked4));
+        val.put(TableEntry.ProfileEntry.COLUMN_AIRPLANE_ON, parseBoolToInt(checked5));
+        val.put(TableEntry.ProfileEntry.COLUMN_NOTIFICATION_SOUND, parseBoolToInt(checked6));
+        val.put(TableEntry.ProfileEntry.COLUMN_SCREEN_TIMEOUT_ON, parseBoolToInt(checked7));
 
         long id = db.insert(TableEntry.ProfileEntry.TABLE_NAME, null,val);
 
@@ -264,9 +265,9 @@ public class StartActivity extends FragmentActivity implements
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_profiles_activity,container, false);
-            profiles= getAll();
-            adapter = new MyProfileArrayAdapter(getActivity().getApplicationContext(), profiles);
-            setListAdapter(adapter);
+//            profiles= getAll();
+//            adapter = new MyProfileArrayAdapter(getActivity().getApplicationContext(), profiles);
+//            setListAdapter(adapter);
 
             return rootView;
 		}
@@ -278,18 +279,23 @@ public class StartActivity extends FragmentActivity implements
 //            arrayAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, getAll());
 //            arrayAdapter.notifyDataSetChanged();
 //            setListAdapter(arrayAdapter);
+            profiles= getAll();
+            adapter = new MyProfileArrayAdapter(getActivity().getApplicationContext(), profiles);
+            setListAdapter(adapter);
 
-//            getListView().setOnItemClickListener(this);
-        }
+            getListView().setOnItemClickListener(this);
+            }
 
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
                     .show();
+            ExecuteProfile ex = new ExecuteProfile(getActivity());
 
+            ex.go(getIDByName(profiles.get(position).getName()));
         }
         private ArrayList<Profile> getAll() {
-            String selectQuery = "SELECT  * FROM " +  TableEntry.ProfileEntry.TABLE_NAME;
+            String selectQuery = "SELECT  * FROM " +  TableEntry.ProfileEntry.TABLE_NAME + " ORDER BY id ASC";
             mDBHelper = new AmbientDbHelper(getActivity());
             SQLiteDatabase db = mDBHelper.getReadableDatabase();
 
@@ -318,6 +324,28 @@ public class StartActivity extends FragmentActivity implements
             }
             return profiles;
         }
+        private int getIDByName(String name) {
+            String selectQuery = "SELECT id FROM " +  TableEntry.ProfileEntry.TABLE_NAME + " WHERE name="+"\""+name+"\";";
+            mDBHelper = new AmbientDbHelper(getActivity());
+            SQLiteDatabase db = mDBHelper.getReadableDatabase();
+            int res = 1;
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            ArrayList<Profile> profiles = new ArrayList<Profile>();
+            int i=0;
+            try {
+                if (cursor.moveToFirst()) {
+                    do {
+                        res = cursor.getInt(0);
+                    } while (cursor.moveToNext());
+                }
+            }
+            finally{
+                cursor.close();
+                db.close();
+                mDBHelper.close();
+            }
+            return res;
+        }
 	}
 	
 	/**
@@ -345,5 +373,12 @@ public class StartActivity extends FragmentActivity implements
         DialogFragment dialog = new NewProfile();
         dialog.show(fm, "DIALOG new profile");
 	}
+
+    public int parseBoolToInt(boolean bool){
+        if(bool == true){
+            return 1;
+        }
+        return 0;
+    }
 
 }
