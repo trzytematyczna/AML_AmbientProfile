@@ -129,16 +129,10 @@ public class StartActivity extends FragmentActivity implements
 
     public void onSaveClick(String name, boolean checked1, boolean checked2, boolean checked3, boolean checked4, boolean checked5, boolean checked6, boolean checked7) {
         saveToDB(name,checked1, checked2, checked3, checked4, checked5, checked6, checked7);
-//        ProfilesSectionFragment.profiles = getAll123();
-//        ProfilesSectionFragment.adapter.clear();
-//        ArrayList<Profile> profiles= getAll123();
-//        ProfilesSectionFragment.adapter.addAll(profiles);
-//        ProfilesSectionFragment.adapter.notifyDataSetChanged();
-//        for(int i=0 ; i<profiles.size(); i++){Log.d(TAG, profiles.get(i)+"");}r
 
+        //updating ProfilesSection list
         ProfilesSectionFragment.adapter.add(new Profile(R.drawable.agh, name));
         ProfilesSectionFragment.adapter.notifyDataSetChanged();
-//        for(int i=0 ; i<profiles.size(); i++){Log.d(TAG, profiles.get(i)+"");}
     }
 
     public void saveToDB(String name, boolean checked1, boolean checked2, boolean checked3, boolean checked4, boolean checked5, boolean checked6, boolean checked7){
@@ -266,33 +260,20 @@ public class StartActivity extends FragmentActivity implements
         public ProfilesSectionFragment() {
 		}
 
-//		@Override
+
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_profiles_activity,container, false);
-//            arrayAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, getAll());
-//            setListAdapter(arrayAdapter);
-            //            Log.d(TAG, "creating profiles");
-////            arrayAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, a);//getAll());
-////            setListAdapter(arrayAdapter);
-//			MyProfileArrayAdapter adapter = new MyProfileArrayAdapter(getActivity().getApplicationContext(),
-//					new Profile[]{new Profile(R.drawable.agh, "AGH"), new Profile(R.drawable.day, "Weekend Day"),
-//				new Profile(R.drawable.night, "Weekend Night"), new Profile(R.drawable.day, "Workday Day")});
-//	        setListAdapter(adapter);
-//
             profiles= getAll();
-//            adapter = new MyProfileArrayAdapter(getActivity().getApplicationContext(), profiles);
             adapter = new MyProfileArrayAdapter(getActivity().getApplicationContext(), profiles);
-//            Log.d(TAG, profiles[0]+"");
             setListAdapter(adapter);
 
             return rootView;
 		}
-//
+
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-//            new ArrayAdapter<String>(getActivity(),)
             Log.d(TAG, "onActCreated");
 //            arrayAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, getAll());
 //            arrayAdapter.notifyDataSetChanged();
@@ -307,49 +288,24 @@ public class StartActivity extends FragmentActivity implements
                     .show();
 
         }
-        //        @Override
-        public void onResume() {
-            super.onResume();
-        }
-//        public void updateProfiles(Profile[] profiles) {
-//            adapter.clear();
-//            adapter.addAll(profiles);
-//            adapter.notifyDataSetChanged();
-//        }
-//        private ArrayList<String> getAll() {
         private ArrayList<Profile> getAll() {
-//            ArrayList<String> points = new ArrayList<String>();
-//            {new Profile(R.drawable.agh, "AGH"), new Profile(R.drawable.day, "Weekend Day"),
-//                    new Profile(R.drawable.night, "Weekend Night"), new Profile(R.drawable.day, "Workday Day")});
             String selectQuery = "SELECT  * FROM " +  TableEntry.ProfileEntry.TABLE_NAME;
             mDBHelper = new AmbientDbHelper(getActivity());
             SQLiteDatabase db = mDBHelper.getReadableDatabase();
 
             Cursor cursor = db.rawQuery(selectQuery, null);
-            int num = cursor.getCount();
-//            Profile [] profiles = new Profile[num];
             ArrayList<Profile> profiles = new ArrayList<Profile>();
-            Profile newProfile;
-            String  point;
             int i=0;
-//            Log.d(TAG, "getAll");
             try {
                 if (cursor.moveToFirst()) {
-//                    Log.d(TAG, "getAll");
                     do {
-//                        point = (cursor.getString(1));
-//                        Log.d(TAG, point);
-//                        points.add(point);
                          if(i%3==1){
-//                             profiles[i++] = new Profile(R.drawable.day, cursor.getString(1));
                              profiles.add(i, new Profile(R.drawable.day, cursor.getString(1)));
                         }
                         else if(i%2==1){
-//                             profiles[i++] = new Profile(R.drawable.night, cursor.getString(1));
                              profiles.add(i, new Profile(R.drawable.night, cursor.getString(1)));
                         }
                         else {
-//                            profiles[i++] = new Profile(R.drawable.agh, cursor.getString(1));
                              profiles.add(i, new Profile(R.drawable.agh, cursor.getString(1)));
                         }
                     } while (cursor.moveToNext());
@@ -360,11 +316,8 @@ public class StartActivity extends FragmentActivity implements
                 db.close();
                 mDBHelper.close();
             }
-//            return points;
             return profiles;
         }
-		
-
 	}
 	
 	/**
@@ -388,54 +341,9 @@ public class StartActivity extends FragmentActivity implements
 	
 	public void onButtonProfileClick(View view){
 		Log.d(TAG, "buttonClick");
-//		Intent intent = new Intent(getApplicationContext(), NewProfile.class);
-//		startActivity(intent);
         FragmentManager fm = getSupportFragmentManager();
         DialogFragment dialog = new NewProfile();
         dialog.show(fm, "DIALOG new profile");
 	}
-    private ArrayList<Profile> getAll123() {
-        String selectQuery = "SELECT  * FROM " +  TableEntry.ProfileEntry.TABLE_NAME;
-        mDBHelper = new AmbientDbHelper(getApplicationContext());
-        SQLiteDatabase db = mDBHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        int num = cursor.getCount();
-//            Profile [] profiles = new Profile[num];
-        ArrayList<Profile> profiles = new ArrayList<Profile>();
-        Profile newProfile;
-        String  point;
-        int i=0;
-//            Log.d(TAG, "getAll");
-        try {
-            if (cursor.moveToFirst()) {
-//                    Log.d(TAG, "getAll");
-                do {
-//                        point = (cursor.getString(1));
-//                        Log.d(TAG, point);
-//                        points.add(point);
-                    if(i%3==1){
-//                             profiles[i++] = new Profile(R.drawable.day, cursor.getString(1));
-                        profiles.add(i, new Profile(R.drawable.day, cursor.getString(1)));
-                    }
-                    else if(i%2==1){
-//                             profiles[i++] = new Profile(R.drawable.night, cursor.getString(1));
-                        profiles.add(i, new Profile(R.drawable.night, cursor.getString(1)));
-                    }
-                    else {
-//                            profiles[i++] = new Profile(R.drawable.agh, cursor.getString(1));
-                        profiles.add(i, new Profile(R.drawable.agh, cursor.getString(1)));
-                    }
-                } while (cursor.moveToNext());
-            }
-        }
-        finally{
-            cursor.close();
-            db.close();
-            mDBHelper.close();
-        }
-//            return points;
-        return profiles;
-    }
 
 }
